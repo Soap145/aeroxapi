@@ -2,8 +2,10 @@ from flask import Flask, request, jsonify
 import requests
 from PIL import Image
 import numpy as np
+from shapely.geometry import Polygon
 import io
 import math
+
 
 app = Flask(__name__)
 NEXTZEN_API_KEY = 'N-y9kIrESbaIApeIkLrXCA'  # Replace with your actual API key
@@ -31,7 +33,8 @@ def get_terrain():
         if type_ == "Flat":
             return jsonify({
                 "overpassData": overpass_data,
-                "nextzenData": nextzen_data
+                "nextzenData": nextzen_data,
+                "flatPolygons": get_flat_polygons(nextzen_data)
             })
 
         if type_ == "Terrain":
@@ -109,6 +112,47 @@ def get_hex_data(image_content, resize_dim):
     pixels = np.array(img)
     hex_data = [[rgb_to_hex(r, g, b) for r, g, b, _ in row] for row in pixels]
     return hex_data
+
+def get_flat_polygons(nextzen):
+    water_polys = []
+    earth_polys = []
+    if "water" in nextzen:
+            for water in nextzen["water"]["features"]:
+                geometry = water["geometry"]
+                if geometry["type"] == "Polygon":
+                    coords = []
+                    for c in geometry["coordinates"][0]:
+                        coords.append((c[1], c[0]))
+                    water_polys.append(Polygon(coords))
+                elif geometry["type"] in ("MultiPolygon",):
+                    for uclist in geometry["coordinates"]:
+                        for clist in uclist:
+                            coords = [(c[1], c[0]) for c in clist]
+                            water_polys.append(Polygon(coords))
+
+        if "earth" in nextzen:
+            for earth in nextzen["earth"]["features"]:
+                geometry = earth["geometry"]
+                if geometry["type"] == "Polygon":
+                    poly = Polygon([(c[1], c[0]) for c in geometry["coordinates"][0]])
+                    for water in water_polys:
+                        poly = poly.difference(water)
+
+                    polys = poly.geoms if poly.geom_type == "MultiPolygon" else [poly]
+                    for p in polys:
+                        tile.ways["earth"].append(list(p.exterior.coords))
+                elif geometry["type"] == "MultiPolygon":
+                    for uclist in geometry["coordinates"]:
+                        for clist in uclist:
+                            poly = Polygon([(c[1], c[0]) for c in clist])
+                            for water in water_polys:
+                                poly = poly.difference(water)
+
+                            polys = poly.geoms if poly.geom_type in ("MultiPolygon", "GeometryCollection") else [poly]
+                            for p in polys:
+                                earth_polys.append(list(p.exterior.coords))
+    return earth_polys
+
 
 def rgb_to_hex(r, g, b):
     return f"#{r:02x}{g:02x}{b:02x}"
