@@ -60,7 +60,7 @@ def get_terrain():
 
     except Exception as e:
         print(e)
-        return e, 500# "Error processing images or fetching data", 500
+        return JSON.stringify(e), 500# "Error processing images or fetching data", 500
 
 def get_nextzen_data(zoom, tilex, tiley):
     nextzen_url = f"https://tile.nextzen.org/tilezen/vector/v1/all/{zoom}/{tilex}/{tiley}.json?api_key={NEXTZEN_API_KEY}"
