@@ -44,7 +44,7 @@ def get_terrain():
             satellite_response = requests.get(satellite_url)
 
             if not terrain_response.ok or not satellite_response.ok:
-                return "Error fetching terrain or satellite images", 500
+                return  terrain_response, 500# "Error fetching terrain or satellite images", 500
 
             terrain_height_data = get_height_data(terrain_response.content, resize_dim)
             satellite_hex_data = get_hex_data(satellite_response.content, resize_dim)
