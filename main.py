@@ -118,7 +118,7 @@ def get_height_data(image_content, resize_dim):
         
         # Process height data
         height_data = [
-            [-10000 + ((r * 256 * 256 + g * 256 + b) * 0.1) for r, g, b in row]
+            [-10000 + ((r * 255 * 255 + g * 255 + b) * 0.1) for r, g, b in row]
             for row in pixels
         ]
         return height_data
