@@ -101,16 +101,34 @@ def tile_to_bbox(tilex, tiley, zoom):
     return f"{lat_min},{lon_min},{lat_max},{lon_max}"
 
 def get_height_data(image_content, resize_dim):
-    img = Image.open(io.BytesIO(image_content)).resize((resize_dim, resize_dim))
+    # Open the image, force it to RGB, and resize
+    img = Image.open(io.BytesIO(image_content)).convert("RGB").resize((resize_dim, resize_dim))
+    # Convert the image to a NumPy array
     pixels = np.array(img)
-    height_data = [[-10000 + ((r * 256 * 256 + g * 256 + b) * 0.1) for r, g, b, _ in row] for row in pixels]
+    
+    # Validate pixel values are within the expected range
+    assert pixels.dtype == np.uint8, "Pixel values must be in the range 0-255"
+    
+    # Process the height data
+    height_data = [
+        [-10000 + ((r * 256 * 256 + g * 256 + b) * 0.1) for r, g, b in row]
+        for row in pixels
+    ]
     return height_data
 
 def get_hex_data(image_content, resize_dim):
-    img = Image.open(io.BytesIO(image_content)).resize((resize_dim, resize_dim))
+    # Open the image, force it to RGB, and resize
+    img = Image.open(io.BytesIO(image_content)).convert("RGB").resize((resize_dim, resize_dim))
+    # Convert the image to a NumPy array
     pixels = np.array(img)
-    hex_data = [[rgb_to_hex(r, g, b) for r, g, b, _ in row] for row in pixels]
+    
+    # Validate pixel values are within the expected range
+    assert pixels.dtype == np.uint8, "Pixel values must be in the range 0-255"
+    
+    # Convert pixel values to hex
+    hex_data = [[rgb_to_hex(r, g, b) for r, g, b in row] for row in pixels]
     return hex_data
+
 
 def get_flat_polygons(nextzen):
     water_polys = []
