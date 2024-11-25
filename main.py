@@ -101,33 +101,55 @@ def tile_to_bbox(tilex, tiley, zoom):
     return f"{lat_min},{lon_min},{lat_max},{lon_max}"
 
 def get_height_data(image_content, resize_dim):
-    # Open the image, force it to RGB, and resize
-    img = Image.open(io.BytesIO(image_content)).convert("RGB").resize((resize_dim, resize_dim))
-    # Convert the image to a NumPy array
-    pixels = np.array(img)
+    try:
+        # Open the image, convert to RGB, and resize
+        img = Image.open(io.BytesIO(image_content)).convert("RGB").resize((resize_dim, resize_dim))
+        pixels = np.array(img)
+        
+        # Debugging outputs
+        print("Height Data - Pixel array shape:", pixels.shape)
+        print("Height Data - Pixel dtype:", pixels.dtype)
+        
+        # Validate shape and type
+        if pixels.ndim != 3 or pixels.shape[2] != 3:
+            raise ValueError("Unexpected image format. Ensure the image is RGB.")
+        if pixels.dtype != np.uint8:
+            raise ValueError("Pixel values must be uint8.")
+        
+        # Process height data
+        height_data = [
+            [-10000 + ((r * 256 * 256 + g * 256 + b) * 0.1) for r, g, b in row]
+            for row in pixels
+        ]
+        return height_data
     
-    # Validate pixel values are within the expected range
-    assert pixels.dtype == np.uint8, "Pixel values must be in the range 0-255"
-    
-    # Process the height data
-    height_data = [
-        [-10000 + ((r * 256 * 256 + g * 256 + b) * 0.1) for r, g, b in row]
-        for row in pixels
-    ]
-    return height_data
+    except Exception as e:
+        print("Error in get_height_data:", e)
+        raise
 
 def get_hex_data(image_content, resize_dim):
-    # Open the image, force it to RGB, and resize
-    img = Image.open(io.BytesIO(image_content)).convert("RGB").resize((resize_dim, resize_dim))
-    # Convert the image to a NumPy array
-    pixels = np.array(img)
+    try:
+        # Open the image, convert to RGB, and resize
+        img = Image.open(io.BytesIO(image_content)).convert("RGB").resize((resize_dim, resize_dim))
+        pixels = np.array(img)
+        
+        # Debugging outputs
+        print("Hex Data - Pixel array shape:", pixels.shape)
+        print("Hex Data - Pixel dtype:", pixels.dtype)
+        
+        # Validate shape and type
+        if pixels.ndim != 3 or pixels.shape[2] != 3:
+            raise ValueError("Unexpected image format. Ensure the image is RGB.")
+        if pixels.dtype != np.uint8:
+            raise ValueError("Pixel values must be uint8.")
+        
+        # Convert to hex
+        hex_data = [[rgb_to_hex(r, g, b) for r, g, b in row] for row in pixels]
+        return hex_data
     
-    # Validate pixel values are within the expected range
-    assert pixels.dtype == np.uint8, "Pixel values must be in the range 0-255"
-    
-    # Convert pixel values to hex
-    hex_data = [[rgb_to_hex(r, g, b) for r, g, b in row] for row in pixels]
-    return hex_data
+    except Exception as e:
+        print("Error in get_hex_data:", e)
+        raise
 
 
 def get_flat_polygons(nextzen):
