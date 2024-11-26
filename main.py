@@ -37,24 +37,22 @@ def get_terrain():
             })
 
         if type_ == "Terrain":
-            terrain_url = f"https://api.mapbox.com/v4/mapbox.terrain-rgb/{zoom}/{tilex}/{tiley}.pngraw?access_token=pk.eyJ1IjoiYWVyb3gyMDI0IiwiYSI6ImNscTFpM3RjcDA5dmQydnJ5dWduc3phNHIifQ.CL1jxgUxLJtOaI_JF8PIhQ"
-            satellite_url = f"https://api.mapbox.com/v4/mapbox.satellite/{zoom}/{tilex}/{tiley}.pngraw?access_token=pk.eyJ1IjoiYWVyb3gyMDI0IiwiYSI6ImNscTFpM3RjcDA5dmQydnJ5dWduc3phNHIifQ.CL1jxgUxLJtOaI_JF8PIhQ"
+          #  terrain_url = f"https://api.mapbox.com/v4/mapbox.terrain-rgb/{zoom}/{tilex}/{tiley}.pngraw?access_token=pk.eyJ1IjoiYWVyb3gyMDI0IiwiYSI6ImNscTFpM3RjcDA5dmQydnJ5dWduc3phNHIifQ.CL1jxgUxLJtOaI_JF8PIhQ"
+           # satellite_url = f"https://api.mapbox.com/v4/mapbox.satellite/{zoom}/{tilex}/{tiley}.pngraw?access_token=pk.eyJ1IjoiYWVyb3gyMDI0IiwiYSI6ImNscTFpM3RjcDA5dmQydnJ5dWduc3phNHIifQ.CL1jxgUxLJtOaI_JF8PIhQ"
             
-            terrain_response = requests.get(terrain_url)
-            satellite_response = requests.get(satellite_url)
+           # terrain_response = requests.get(terrain_url)
+          #  satellite_response = requests.get(satellite_url)
 
-            if not terrain_response.ok or not satellite_response.ok:
-                return  terrain_response, 500# "Error fetching terrain or satellite images", 500
+          #  if not terrain_response.ok or not satellite_response.ok:
+           #     return  terrain_response, 500# "Error fetching terrain or satellite images", 500
 
            #  terrain_height_data = get_height_data(terrain_response.content, resize_dim)
            #  satellite_hex_data = get_hex_data(satellite_response.content, resize_dim)
-            terrain_base64 = encode_image_to_base64(terrain_response.content)
-            satellite_base64 = encode_image_to_base64(satellite_response.content)
+           # terrain_base64 = encode_image_to_base64(terrain_response.content)
+           # satellite_base64 = encode_image_to_base64(satellite_response.content)
 
 
             return jsonify({
-                "terrainHeightData": terrain_base64,
-                "satelliteHexData": satellite_base64,
                 "nextzenData": nextzen_data,
                 "overpassData": overpass_data
             })
