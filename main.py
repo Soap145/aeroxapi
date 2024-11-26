@@ -48,10 +48,13 @@ def get_terrain():
 
            #  terrain_height_data = get_height_data(terrain_response.content, resize_dim)
            #  satellite_hex_data = get_hex_data(satellite_response.content, resize_dim)
+            terrain_base64 = encode_image_to_base64(terrain_response.content)
+            satellite_base64 = encode_image_to_base64(satellite_response.content)
+
 
             return jsonify({
-                "terrainHeightData": terrain_response,
-                "satelliteHexData": satellite_response,
+                "terrainHeightData": terrain_base64,
+                "satelliteHexData": satellite_base64,
                 "nextzenData": nextzen_data,
                 "overpassData": overpass_data
             })
@@ -60,7 +63,7 @@ def get_terrain():
 
     except Exception as e:
         print(e)
-        return JSON.stringify(e), 500# "Error processing images or fetching data", 500
+        return "Error processing images or fetching data", 500
 
 def get_nextzen_data(zoom, tilex, tiley):
     nextzen_url = f"https://tile.nextzen.org/tilezen/vector/v1/all/{zoom}/{tilex}/{tiley}.json?api_key={NEXTZEN_API_KEY}"
@@ -153,6 +156,10 @@ def get_hex_data(image_content, resize_dim):
         print("Error in get_hex_data:", e)
         raise
 
+
+def encode_image_to_base64(image_content):
+    # Convert image content to base64
+    return base64.b64encode(image_content).decode('utf-8')
 
 def get_flat_polygons(nextzen):
     water_polys = []
