@@ -46,12 +46,12 @@ def get_terrain():
             if not terrain_response.ok or not satellite_response.ok:
                 return  terrain_response, 500# "Error fetching terrain or satellite images", 500
 
-            terrain_height_data = get_height_data(terrain_response.content, resize_dim)
-            satellite_hex_data = get_hex_data(satellite_response.content, resize_dim)
+           #  terrain_height_data = get_height_data(terrain_response.content, resize_dim)
+           #  satellite_hex_data = get_hex_data(satellite_response.content, resize_dim)
 
             return jsonify({
-                "terrainHeightData": terrain_height_data,
-                "satelliteHexData": satellite_hex_data,
+                "terrainHeightData": terrain_response,
+                "satelliteHexData": satellite_response,
                 "nextzenData": nextzen_data,
                 "overpassData": overpass_data
             })
