@@ -6,7 +6,7 @@ import json
 
 # Constants
 TERRARIUM_URL = "https://tile.nextzen.org/tilezen/terrain/v1/256/terrarium/{zoom}/{x}/{z}.png?api_key=Wf4VKN0qQIebdQBFqlNWEQ"
-SATELLITE_URL = "https://2.aerial.maps.api.here.com/maptile/2.1/maptile/newest/satellite.day/{zoom}/{x}/{z}/256/png?app_id=pcXBZARHILwXlCihx8d6&token=dzJKV7oQT-zs-vRT_KqiLA&lg=ENG"
+SATELLITE_URL = "https://2.aerial.maps.api.here.com/maptile/2.1/maptile/newest/satellite.day/{zoom}/{x}/{z}/512/png?app_id=pcXBZARHILwXlCihx8d6&token=dzJKV7oQT-zs-vRT_KqiLA&lg=ENG"
 OVERPASS_API = "https://overpass-api.de/api/interpreter"
 NEXTZEN_API = "https://tile.nextzen.org/"
 
@@ -79,8 +79,8 @@ def calculate_bbox(coordsx, coordsz, zoom):
     n = 2 ** zoom
     lon_min = coordsx / n * 360.0 - 180.0
     lon_max = (coordsx + 1) / n * 360.0 - 180.0
-    lat_min = np.degrees(np.arctan(np.sinh(np.pi * (1 - 2 * coordsz / n)))),
-    lat_max = np.degrees(np.arctan(np.sinh(np.pi * (1 - 2 * (coordsz + 1) / n)))))
+    lat_min = np.degrees(np.arctan(np.sinh(np.pi * (1 - 2 * coordsz / n))))
+    lat_max = np.degrees(np.arctan(np.sinh(np.pi * (1 - 2 * (coordsz + 1) / n))))
     return f"{lat_min},{lon_min},{lat_max},{lon_max}"
 
 def main(coordsx, coordsz, res, zoom):
