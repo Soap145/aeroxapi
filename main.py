@@ -122,13 +122,13 @@ def get_height_data(image_content, resize_dim):
       #      [-10000 + (((np.uint16(r) * 256 * 256) + (np.uint16(g) * 256) + np.uint16(b)) * 0.1) for r, g, b in row]
       #  for row in pixels
       #  ]
-         height_data = [
-             [(np.uint16(r) * 256 + np.uint16(g) + np.uint16(b) / 256) - 32768 for r, g, b in row]
-         for row in pixels
-         ]
+      height_data = [
+    [(np.uint16(r) * 256 + np.uint16(g) + np.uint16(b) / 256) - 32768 for r, g, b in row]
+    for row in pixels
+]
 
+return height_data
 
-        return height_data
     
     except Exception as e:
         print("Error in get_height_data:", e)
