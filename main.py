@@ -5,6 +5,7 @@ import numpy as np
 from shapely.geometry import Polygon
 import io
 import math
+import json
 
 app = Flask(__name__)
 NEXTZEN_API_KEY = 'N-y9kIrESbaIApeIkLrXCA'  # Replace with your actual API key
