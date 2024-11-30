@@ -5,7 +5,6 @@ import numpy as np
 from shapely.geometry import Polygon
 import io
 import math
-import json
 
 app = Flask(__name__)
 NEXTZEN_API_KEY = 'N-y9kIrESbaIApeIkLrXCA'  # Replace with your actual API key
@@ -61,7 +60,7 @@ def get_terrain():
 
     except Exception as e:
         print(e)
-        return JSON.stringify(e), 500# "Error processing images or fetching data", 500
+        return  "Error processing images or fetching data", 500
 
 def get_nextzen_data(zoom, tilex, tiley):
     nextzen_url = f"https://tile.nextzen.org/tilezen/vector/v1/all/{zoom}/{tilex}/{tiley}.json?api_key={NEXTZEN_API_KEY}"
