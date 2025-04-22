@@ -84,6 +84,9 @@ def get_overpass_data(bbox):
           node["natural"="tree"]({bbox});
           way["natural"="tree"]({bbox});
           relation["natural"="tree"]({bbox});
+          node["building"]({bbox});
+          way["building"]({bbox});
+          relation["building"]({bbox});
         );
         out body;
         >;
