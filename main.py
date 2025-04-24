@@ -62,6 +62,12 @@ def get_terrain():
         print(e)
         return  "Error processing images or fetching data", 500
 
+
+
+@app.route('/unsleep', methods=['GET'])
+def un_sleep():
+    return "Unsleeped"
+    
 def get_nextzen_data(zoom, tilex, tiley):
     nextzen_url = f"https://tile.nextzen.org/tilezen/vector/v1/all/{zoom}/{tilex}/{tiley}.json?api_key={NEXTZEN_API_KEY}"
     response = requests.get(nextzen_url)
